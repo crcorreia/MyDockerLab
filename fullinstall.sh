@@ -80,9 +80,9 @@ if [[ $create_file_structure =~ ^[Yy]$ ]]; then
     sudo mkdir /opt/DockerCompose/Tools
     sudo mkdir /opt/DockerCompose/SmartHome
 
-    cp [/MYLINUXINSTAL/NetWork/docker-compose.yml] [/opt/DockerCompose/Network/]
-    cp [/MYLINUXINSTAL/Tools/docker-compose.yml] [/opt/DockerCompose/Tools/]
-    cp [/MYLINUXINSTAL/SmartHome/docker-compose.yml] [/opt/DockerCompose/SmartHome/]
+    cp [/MYLINUXINSTAL/ComposeFiles/NetWork/docker-compose.yml] [/opt/DockerCompose/Network/]
+    cp [/MYLINUXINSTAL/ComposeFiles/Tools/docker-compose.yml] [/opt/DockerCompose/Tools/]
+    cp [/MYLINUXINSTAL/ComposeFiles/SmartHome/docker-compose.yml] [/opt/DockerCompose/SmartHome/]
 fi
 
 # Ask if the user wants to create docker containers
