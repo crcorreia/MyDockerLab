@@ -1,0 +1,99 @@
+services:
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: Wireguard
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Lisbon
+      - PEERS=Profile1,Profile2,OtherProfile
+    volumes:
+      - /opt/appdata/wireguard:/config
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=Europe/Lisbon
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_INCLUDE_STOPPED=true
+      - WATCHTOWER_REVIVE_STOPPED=true
+      - WATCHTOWER_SCHEDULE=0 0 2 * * ?
+
+  speedtest-tracker:
+    image: lscr.io/linuxserver/speedtest-tracker:latest
+    container_name: speedtest-tracker
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Lisbon
+      - APP_KEY="base64:n5NIeNAQz4B4Z6/i2FDbfDosTr0DtyF6oClgjYTgBKc="
+      - DB_CONNECTION=sqlite
+      - SPEEDTEST_SCHEDULE="0 * * * *"
+      - SPEEDTEST_SERVERS="46985,31309,1249,34265,32773,40917,60452"
+    volumes:
+      - /opt/appdata/speedtest-tracker/data:/config
+    ports:
+      - 8082:80
+    restart: unless-stopped
+
+  duplicati:
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: duplicati
+    privileged: true
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Lisbon
+    volumes:
+      - /opt/appdata/duplicati/appdata/config:/config
+      - /opt/appdata/duplicati/backups:/backups
+      - /opt:/source
+    ports:
+      - 8200:8200
+    restart: unless-stopped
+
+  frigate:
+    container_name: frigate
+    privileged: true # this may not be necessary for all setups
+    restart: unless-stopped
+    image: ghcr.io/blakeblackshear/frigate:stable
+    shm_size: "64mb" # update for your cameras based on calculation above
+    devices:
+      - /dev/bus/usb:/dev/bus/usb # Passes the USB Coral, needs to be modified for other versions
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /opt/appdata/frigate/config:/config
+      - /home/cesar/frigate/storage:/media/frigate
+      - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    ports:
+      - "8971:8971"
+      - "5000:5000" # Internal unauthenticated access. Expose carefully.
+      - "8554:8554" # RTSP feeds
+      - "8555:8555/tcp" # WebRTC over tcp
+      - "8555:8555/udp" # WebRTC over udp
+    environment:
+      FRIGATE_RTSP_PASSWORD: "720@ABF99cf"
+
+  filebrowser:
+    image: filebrowser/filebrowser
+    user: 1000:1000
+    ports:
+      - 8081:80
+    volumes:
+      - /home/cesar/:/srv
+      - /opt/appdata/filebrowser/filebrowser.db:/database.db
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
