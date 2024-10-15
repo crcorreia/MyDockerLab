@@ -63,6 +63,54 @@ if [[ $install_coraltpu =~ ^[Yy]$ ]]; then
 
 fi
 
+# Ask if the user wants to create file structure for docker
+read -p "Do you want to install Portainer? (y/n) " create_file_structure
+if [[ $create_file_structure =~ ^[Yy]$ ]]; then
+    sudo mkdir /opt/appdata
+    sudo mkdir /opt/appdata/mosquitto
+    sudo mkdir /opt/appdata/zigbee2mqtt
+    sudo mkdir /opt/appdata/wireguard
+    sudo mkdir /opt/appdata/duplicati
+    sudo mkdir /opt/appdata/frigate
+    sudo mkdir /home/cesar/frigate
+    sudo mkdir /home/cesar/frigate/storage
+    sudo mkdir /home/cesar/filebrowser
+    sudo mkdir /opt/DockerCompose
+    sudo mkdir /opt/DockerCompose/Network
+    sudo mkdir /opt/DockerCompose/Tools
+    sudo mkdir /opt/DockerCompose/SmartHome
+
+    cp [/MYLINUXINSTAL/NetWork/docker-compose.yml] [/opt/DockerCompose/Network/]
+    cp [/MYLINUXINSTAL/Tools/docker-compose.yml] [/opt/DockerCompose/Tools/]
+    cp [/MYLINUXINSTAL/SmartHome/docker-compose.yml] [/opt/DockerCompose/SmartHome/]
+fi
+
+# Ask if the user wants to create docker containers
+read -p "Do you want to install Portainer? (y/n) " create_containers
+if [[ $create_containers =~ ^[Yy]$ ]]; then
+
+    cd /opt/DockerCompose/Network
+    sudo docker compose pull
+    sudo docker compose up -d
+    sudo docker image prune -af
+    sudo docker volume prune -f
+    sleep 5
+    cd /opt/DockerCompose/Tools
+    sudo docker compose pull
+    sudo docker compose up -d
+    sudo docker image prune -af
+    sudo docker volume prune -f
+    sleep 5
+    cd /opt/DockerCompose/SmartHome
+    sudo docker compose pull
+    sudo docker compose up -d
+    sudo docker image prune -af
+    sudo docker volume prune -f
+    sleep 5
+fi
+
+
+
 # Ask if the user wants to create a new sudo user
 read -p "Do you want to create a new sudo user? (y/n) " create_user
 if [[ $create_user =~ ^[Yy]$ ]]; then
