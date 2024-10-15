@@ -29,47 +29,38 @@ Execute the file:
 The Bash Script Explained
 ===
 
-This shell script appears to automate the installation of Docker and Docker Compose on a Linux system. Here's a breakdown of what each section of the script does:
-1. Set Script Options:
+This shell script appears to automate the installation of Docker , Docker Compose and a series of containers that serve as the basis for my home laboratory  on a Linux system. 
+Here's a breakdown of what each section of the script does:
+1. Run system updates:
 
 ```
-set -o errexit
-set -o nounset
-IFS=$(printf '\n\t')
-```
-- ```set -o errexit```: The script will exit if any command exits with a non-zero status.
-- ```set -o nounset```: The script will exit if it tries to use an uninitialized variable.
-- ```IFS=$(printf '\n\t')```: Internal Field Separator is set to newline and tab.
+apt-get update
+apt-get upgrade -y
+apt autoremove -y
 
-2. Install Docker
 ```
-apt install sudo -y && apt install curl -y
+2. Install curl & sudo
+```
+apt-get install -y curl
+apt-get install -y sudo
+
+```
+
+3. Install Docker
+```
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
-printf '\nDocker installed successfully\n\n'
-```
 
-- Installs sudo and curl using the apt package manager.
+```
 - Downloads the Docker installation script using curl.
 - Executes the Docker installation script using sudo sh.
-- Prints a success message.
-
-3. Wait for Docker to Start
-```
-printf 'Waiting for Docker to start...\n\n'
-sleep 5
-```
-- Prints a message indicating that the script is waiting for Docker to start.
-- Sleeps for 5 seconds.
 
 4. Install Docker Compose:
 ```
-COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
-sudo curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-sudo curl -L https://raw.githubusercontent.com/docker/compose/${COMPOSE_VERSION}/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose
-printf '\nDocker Compose installed successfully\n\n'
 sudo docker-compose -v
+
 ```
 
 - Retrieves the latest Docker Compose version from GitHub API.
@@ -79,5 +70,61 @@ sudo docker-compose -v
 - Prints a success message.
 - Displays the installed Docker Compose version.
 
+5. Install Portainer
+```
+docker volume create portainer_data
+docker run -d -p 8000:8000 -p 9443:9443 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
 
+```
+7. Install Coral TPU
+```
+sudo apt install python3-pip
+pip install wheel && pip install --force-reinstall https://github.com/leigh-johnson/Tensorflow-bin/releases/download/v2.2.0/tensorflow-2.2.0-cp37-cp37m-linux_armv7l.whl
+echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
+sudo curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-get install libedgetpu1-std
+```
+8. create file structure for docker & copy files
+```
+    sudo mkdir /opt/appdata
+    sudo mkdir /opt/appdata/mosquitto
+    sudo mkdir /opt/appdata/zigbee2mqtt
+    sudo mkdir /opt/appdata/wireguard
+    sudo mkdir /opt/appdata/duplicati
+    sudo mkdir /opt/appdata/frigate
+    sudo mkdir /home/cesar/frigate
+    sudo mkdir /home/cesar/frigate/storage
+    sudo mkdir /home/cesar/filebrowser
+    sudo mkdir /opt/DockerCompose
+    sudo mkdir /opt/DockerCompose/Network
+    sudo mkdir /opt/DockerCompose/Tools
+    sudo mkdir /opt/DockerCompose/SmartHome
+
+    cp [/MYLINUXINSTAL/ComposeFiles/NetWork/docker-compose.yml] [/opt/DockerCompose/Network/]
+    cp [/MYLINUXINSTAL/ComposeFiles/Tools/docker-compose.yml] [/opt/DockerCompose/Tools/]
+    cp [/MYLINUXINSTAL/ComposeFiles/SmartHome/docker-compose.yml] [/opt/DockerCompose/SmartHome/]
+```
+9. Create containers
+```
+    cd /opt/DockerCompose/Network
+    sudo docker compose pull
+    sudo docker compose up -d
+    sudo docker image prune -af
+    sudo docker volume prune -f
+    sleep 5
+    cd /opt/DockerCompose/Tools
+    sudo docker compose pull
+    sudo docker compose up -d
+    sudo docker image prune -af
+    sudo docker volume prune -f
+    sleep 5
+    cd /opt/DockerCompose/SmartHome
+    sudo docker compose pull
+    sudo docker compose up -d
+    sudo docker image prune -af
+    sudo docker volume prune -f
+    sleep 5
+```
+10. Ask if the user wants to create a new sudo user
+    
 Please note that this script assumes a Debian-based Linux distribution. If you are using a different distribution, adjustments may be needed. Additionally, it's essential to review and understand scripts before executing them, especially when using sudo commands from the internet.
