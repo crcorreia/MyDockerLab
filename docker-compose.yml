@@ -1,0 +1,35 @@
+########################### NETWORKS
+networks:
+  default:
+    driver: bridge
+  dockervlan:
+    name: dockervlan
+    driver: macvlan
+    driver_opts:
+      parent: enp2s0 # using ifconfig
+    ipam:
+      config:
+        - subnet: "192.168.1.0/24"
+          ip_range: "192.168.1.225/32"
+          gateway: "192.168.1.1"
+########################### SERVICES
+services:
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    restart: unless-stopped    
+    ports:
+      - "53:53/udp"
+      - "67:67/udp"
+      - "68:68/tcp"
+      - "68:68/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+      - "853:853/tcp"
+      - "3000:3000/tcp"
+    volumes:
+      - "/opt/appdata/adguardhome/conf:/opt/adguardhome/conf"
+      - "/opt/appdata/adguardhome/work:/opt/adguardhome/work"
+    networks:
+      dockervlan:
+        ipv4_address: 192.168.1.225 # IP address inside the defined range
