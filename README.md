@@ -39,26 +39,24 @@ apt-get upgrade -y
 apt autoremove -y
 
 ```
-2. Install curl & sudo
+2. Install curl
 ```
 apt-get install -y curl
-apt-get install -y sudo
 
 ```
 
-3. Install Docker
+3. Install Docker & Docker Compose
 ```
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
+sudo apt install docker.io docker-compose docker-doc
+sudo systemctl enable --now docker
 
 ```
 - Downloads the Docker installation script using curl.
 - Executes the Docker installation script using sudo sh.
 
-4. Install Docker Compose:
+4. Add user to docker print compose version
 ```
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+sudo /sbin/usermod -aG docker $username  --> logout --> groups
 sudo docker-compose -v
 
 ```
@@ -100,29 +98,29 @@ sudo apt-get install libedgetpu1-std
     sudo mkdir /opt/DockerCompose/Tools
     sudo mkdir /opt/DockerCompose/SmartHome
 
-    cp [/MYLINUXINSTAL/ComposeFiles/NetWork/docker-compose.yml] [/opt/DockerCompose/Network/]
-    cp [/MYLINUXINSTAL/ComposeFiles/Tools/docker-compose.yml] [/opt/DockerCompose/Tools/]
-    cp [/MYLINUXINSTAL/ComposeFiles/SmartHome/docker-compose.yml] [/opt/DockerCompose/SmartHome/]
+    cp /MYLINUXINSTAL/ComposeFiles/NetWork/docker-compose.yml /opt/DockerCompose/Network/
+    cp /MYLINUXINSTAL/ComposeFiles/Tools/docker-compose.yml /opt/DockerCompose/Tools/
+    cp /MYLINUXINSTAL/ComposeFiles/SmartHome/docker-compose.yml /opt/DockerCompose/SmartHome/
 ```
 9. Create containers
 ```
     cd /opt/DockerCompose/Network
-    sudo docker compose pull
-    sudo docker compose up -d
-    sudo docker image prune -af
-    sudo docker volume prune -f
-    sleep 5
+    docker-compose pull
+    docker-compose up -d
+    docker image prune -af
+    docker volume prune -f
+ 
     cd /opt/DockerCompose/Tools
-    sudo docker compose pull
-    sudo docker compose up -d
-    sudo docker image prune -af
-    sudo docker volume prune -f
-    sleep 5
+    docker-compose pull
+    docker-compose up -d
+    docker image prune -af
+    docker volume prune -f
+
     cd /opt/DockerCompose/SmartHome
-    sudo docker compose pull
-    sudo docker compose up -d
-    sudo docker image prune -af
-    sudo docker volume prune -f
+    docker-compose pull
+    docker-compose up -d
+    docker image prune -af
+    docker volume prune -f
     sleep 5
 ```
 10. Ask if the user wants to create a new sudo user
