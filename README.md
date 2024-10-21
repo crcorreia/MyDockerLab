@@ -121,7 +121,7 @@ sudo apt-get install libedgetpu1-std
     docker-compose up -d
     docker image prune -af
     docker volume prune -f
-    sleep 5
+ 
 ```
 10. Ask if the user wants to create a new sudo user
     
