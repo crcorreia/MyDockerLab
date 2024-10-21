@@ -84,7 +84,7 @@ services:
       - "8555:8555/tcp" # WebRTC over tcp
       - "8555:8555/udp" # WebRTC over udp
     environment:
-      FRIGATE_RTSP_PASSWORD: "720@ABF99cf"
+      FRIGATE_RTSP_PASSWORD: "password"
 
   filebrowser:
     image: filebrowser/filebrowser
