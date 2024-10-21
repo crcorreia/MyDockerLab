@@ -3,7 +3,7 @@
 To install the newest versions of sudo (optional depending on which script you use), curl, Docker, and docker compose, simply ssh into your server, then clone this repository with: 
 
 ```
-git clone https://github.com/crcorreia/MYLINUXINSTAL.git
+git clone https://github.com/crcorreia/MyDockerLab.git
 ```
 If you don't have git installed, you can run:
 ```
@@ -12,7 +12,8 @@ apt install git
 
 Change into the new directory:
 ```
-cd MYLINUXINSTAL
+cd MyDockerLab
+
 ```
 
 Make the file executable:
@@ -98,9 +99,9 @@ sudo apt-get install libedgetpu1-std
     sudo mkdir /opt/DockerCompose/Tools
     sudo mkdir /opt/DockerCompose/SmartHome
 
-    cp /MYLINUXINSTAL/ComposeFiles/NetWork/docker-compose.yml /opt/DockerCompose/Network/
-    cp /MYLINUXINSTAL/ComposeFiles/Tools/docker-compose.yml /opt/DockerCompose/Tools/
-    cp /MYLINUXINSTAL/ComposeFiles/SmartHome/docker-compose.yml /opt/DockerCompose/SmartHome/
+    cp /MyDockerLab/ComposeFiles/NetWork/docker-compose.yml /opt/DockerCompose/Network/
+    cp /MyDockerLab/ComposeFiles/Tools/docker-compose.yml /opt/DockerCompose/Tools/
+    cp /MyDockerLab/ComposeFiles/SmartHome/docker-compose.yml /opt/DockerCompose/SmartHome/
 ```
 9. Create containers
 ```
