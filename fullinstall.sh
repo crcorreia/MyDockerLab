@@ -64,7 +64,7 @@ if [[ $install_coraltpu =~ ^[Yy]$ ]]; then
 fi
 
 # Ask if the user wants to create file structure for docker
-read -p "Do you want to install Portainer? (y/n) " create_file_structure
+read -p "Do you want to install  to create file structure for docker? (y/n) " create_file_structure
 if [[ $create_file_structure =~ ^[Yy]$ ]]; then
     sudo mkdir /opt/appdata
     sudo mkdir /opt/appdata/mosquitto
@@ -90,22 +90,22 @@ read -p "Do you want to install Portainer? (y/n) " create_containers
 if [[ $create_containers =~ ^[Yy]$ ]]; then
 
     cd /opt/DockerCompose/Network
-    sudo docker compose pull
-    sudo docker compose up -d
-    sudo docker image prune -af
-    sudo docker volume prune -f
+    docker compose pull
+    docker compose up -d
+    docker image prune -af
+    docker volume prune -f
     sleep 5
     cd /opt/DockerCompose/Tools
-    sudo docker compose pull
-    sudo docker compose up -d
-    sudo docker image prune -af
-    sudo docker volume prune -f
+    docker compose pull
+    docker compose up -d
+    docker image prune -af
+    docker volume prune -f
     sleep 5
     cd /opt/DockerCompose/SmartHome
-    sudo docker compose pull
-    sudo docker compose up -d
-    sudo docker image prune -af
-    sudo docker volume prune -f
+    docker compose pull
+    docker compose up -d
+    docker image prune -af
+    docker volume prune -f
     sleep 5
 fi
 
