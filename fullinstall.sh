@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Run system updates
-apt-get update
-apt-get upgrade -y
+sudo apt-get update
+sudo apt-get upgrade -y
 
 # Install curl
-apt-get install -y curl
+sudo apt-get install -y curl
 
 # Ask if the user wants to install sudo
 read -p "Do you want to install sudo? (y/n) " install_sudo
@@ -16,7 +16,7 @@ fi
 # Ask if the user wants to install Docker
 read -p "Do you want to install Docker? (y/n) " install_docker
 if [[ $install_docker =~ ^[Yy]$ ]]; then
-    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo curl -fsSL https://get.docker.com -o get-docker.sh
     sudo sh get-docker.sh
 fi
 
