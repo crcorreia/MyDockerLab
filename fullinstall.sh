@@ -1,31 +1,29 @@
 #!/bin/bash
 
 # Run system updates
-sudo apt-get update
-sudo apt-get upgrade -y
+apt-get update
+apt-get upgrade -y
+apt autoremove -y
 
 # Install curl
-sudo apt-get install -y curl
+apt-get install -y curl
 
-# Ask if the user wants to install sudo
-read -p "Do you want to install sudo? (y/n) " install_sudo
-if [[ $install_sudo =~ ^[Yy]$ ]]; then
-    apt-get install -y sudo
-fi
-
-# Ask if the user wants to install Docker
+# Ask if the user wants to install Docker and Docker Compose 	Make docker start at boot
 read -p "Do you want to install Docker? (y/n) " install_docker
 if [[ $install_docker =~ ^[Yy]$ ]]; then
-    sudo curl -fsSL https://get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh
+    sudo apt install docker.io docker-compose docker-doc
+    sudo systemctl enable --now docker    
 fi
 
-# Ask if the user wants to install Docker Compose
-read -p "Do you want to install Docker Compose? (y/n) " install_compose
+# Ask if the user wants to Add user to docker
+read -p "Do you want to Add user to docker? (y/n) " install_compose 
 if [[ $install_compose =~ ^[Yy]$ ]]; then
-    sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-	sudo docker-compose -v
+	read -p "Enter the desired username: " username
+ 	if [[ -n "$username" ]]
+	then
+	   sudo /sbin/usermod -aG docker $username  --> logout --> groups
+	fi	  	
+	docker-compose -v
 fi
 
 # Ask if the user wants to install Portainer
@@ -64,7 +62,7 @@ if [[ $install_coraltpu =~ ^[Yy]$ ]]; then
 fi
 
 # Ask if the user wants to create file structure for docker
-read -p "Do you want to install  to create file structure for docker? (y/n) " create_file_structure
+read -p "Do you want to create file structure for docker? (y/n) " create_file_structure
 if [[ $create_file_structure =~ ^[Yy]$ ]]; then
     sudo mkdir /opt/appdata
     sudo mkdir /opt/appdata/mosquitto
@@ -80,36 +78,39 @@ if [[ $create_file_structure =~ ^[Yy]$ ]]; then
     sudo mkdir /opt/DockerCompose/Tools
     sudo mkdir /opt/DockerCompose/SmartHome
 
-    cp [/MYLINUXINSTAL/ComposeFiles/NetWork/docker-compose.yml] [/opt/DockerCompose/Network/]
-    cp [/MYLINUXINSTAL/ComposeFiles/Tools/docker-compose.yml] [/opt/DockerCompose/Tools/]
-    cp [/MYLINUXINSTAL/ComposeFiles/SmartHome/docker-compose.yml] [/opt/DockerCompose/SmartHome/]
+    cp /MYLINUXINSTAL/ComposeFiles/NetWork/docker-compose.yml /opt/DockerCompose/Network/
+    cp /MYLINUXINSTAL/ComposeFiles/Tools/docker-compose.yml /opt/DockerCompose/Tools/
+    cp /MYLINUXINSTAL/ComposeFiles/SmartHome/docker-compose.yml /opt/DockerCompose/SmartHome/
 fi
 
 # Ask if the user wants to create docker containers
-read -p "Do you want to install Portainer? (y/n) " create_containers
+read -p "Do you want to create docker containers? (y/n) " create_containers
 if [[ $create_containers =~ ^[Yy]$ ]]; then
-
-    cd /opt/DockerCompose/Network
-    docker compose pull
-    docker compose up -d
-    docker image prune -af
-    docker volume prune -f
-    sleep 5
+   read -p "Do you want to run Network Compose? (y/n) " network
+   if [[ $network =~ ^[Yy]$ ]]; then
+     cd /opt/DockerCompose/Network
+     docker-compose pull
+     docker-compose up -d
+     docker image prune -af
+     docker volume prune -f
+   fi
+   read -p "Do you want to run Tools Compose? (y/n) " Tools
+   if [[ $Tools =~ ^[Yy]$ ]]; then
     cd /opt/DockerCompose/Tools
-    docker compose pull
-    docker compose up -d
+    docker-compose pull
+    docker-compose up -d
     docker image prune -af
     docker volume prune -f
-    sleep 5
+   fi
+   read -p "Do you want to run SmartHome Compose? (y/n) " SmartHome
+   if [[ $SmartHome =~ ^[Yy]$ ]]; then
     cd /opt/DockerCompose/SmartHome
-    docker compose pull
-    docker compose up -d
+    docker-compose pull
+    docker-compose up -d
     docker image prune -af
     docker volume prune -f
-    sleep 5
+   fi
 fi
-
-
 
 # Ask if the user wants to create a new sudo user
 read -p "Do you want to create a new sudo user? (y/n) " create_user
