@@ -78,9 +78,9 @@ if [[ $create_file_structure =~ ^[Yy]$ ]]; then
     sudo mkdir /opt/DockerCompose/Tools
     sudo mkdir /opt/DockerCompose/SmartHome
 
-    cp /MyDockerLab/ComposeFiles/NetWork/docker-compose.yml /opt/DockerCompose/Network/
-    cp /MyDockerLab/ComposeFiles/Tools/docker-compose.yml /opt/DockerCompose/Tools/
-    cp /MyDockerLab/ComposeFiles/SmartHome/docker-compose.yml /opt/DockerCompose/SmartHome/
+    cp /ComposeFiles/NetWork/docker-compose.yml /opt/DockerCompose/Network/
+    cp /ComposeFiles/Tools/docker-compose.yml /opt/DockerCompose/Tools/
+    cp /ComposeFiles/SmartHome/docker-compose.yml /opt/DockerCompose/SmartHome/
 fi
 
 # Ask if the user wants to create docker containers
