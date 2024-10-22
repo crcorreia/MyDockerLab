@@ -43,7 +43,6 @@ apt autoremove -y
 2. Install curl
 ```
 apt-get install -y curl
-
 ```
 
 3. Install Docker & Docker Compose
@@ -59,7 +58,6 @@ sudo systemctl enable --now docker
 ```
 sudo /sbin/usermod -aG docker $username  --> logout --> groups
 sudo docker-compose -v
-
 ```
 
 - Retrieves the latest Docker Compose version from GitHub API.
@@ -73,7 +71,6 @@ sudo docker-compose -v
 ```
 docker volume create portainer_data
 docker run -d -p 8000:8000 -p 9443:9443 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
-
 ```
 7. Install Coral TPU
 ```
@@ -99,9 +96,9 @@ sudo apt-get install libedgetpu1-std
     sudo mkdir /opt/DockerCompose/Tools
     sudo mkdir /opt/DockerCompose/SmartHome
 
-    cp /MyDockerLab/ComposeFiles/NetWork/docker-compose.yml /opt/DockerCompose/Network/
-    cp /MyDockerLab/ComposeFiles/Tools/docker-compose.yml /opt/DockerCompose/Tools/
-    cp /MyDockerLab/ComposeFiles/SmartHome/docker-compose.yml /opt/DockerCompose/SmartHome/
+    cp /ComposeFiles/NetWork/docker-compose.yml /opt/DockerCompose/Network/
+    cp /ComposeFiles/Tools/docker-compose.yml /opt/DockerCompose/Tools/
+    cp /ComposeFiles/SmartHome/docker-compose.yml /opt/DockerCompose/SmartHome/
 ```
 9. Create containers
 ```
