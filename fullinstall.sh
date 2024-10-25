@@ -11,8 +11,19 @@ apt-get install -y curl
 # Ask if the user wants to install Docker and Docker Compose 	Make docker start at boot
 read -p "Do you want to install Docker? (y/n) " install_docker
 if [[ $install_docker =~ ^[Yy]$ ]]; then
-    sudo apt install docker.io docker-compose docker-doc
-    sudo systemctl enable --now docker    
+    echo "Install necessary packages"
+    sudo apt install ca-certificates curl gnupg dpkg lsb-release
+    echo "Add Docker’s official GPG key"
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -sS https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor > /usr/share/keyrings/docker-ce.gpg
+    sudo chmod a+r /usr/share/keyrings/docker-ce.gpg
+    echo "Set up the Docker repository"
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-ce.gpg] https://download.docker.com/linux/debian $(lsb_release -sc) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    echo "Update the package index"
+    sudo apt update
+    echo "Install Docker Engine, Docker CLI, and Docker Compose"
+    sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    docker -v
 fi
 
 # Ask if the user wants to Add user to docker
@@ -78,9 +89,9 @@ if [[ $create_file_structure =~ ^[Yy]$ ]]; then
     sudo mkdir /opt/DockerCompose/Tools
     sudo mkdir /opt/DockerCompose/SmartHome
 
-    cp /ComposeFiles/NetWork/docker-compose.yml /opt/DockerCompose/Network/
-    cp /ComposeFiles/Tools/docker-compose.yml /opt/DockerCompose/Tools/
-    cp /ComposeFiles/SmartHome/docker-compose.yml /opt/DockerCompose/SmartHome/
+    cp /MyDockerLab/ComposeFiles/NetWork/docker-compose.yml /opt/DockerCompose/Network/
+    cp /MyDockerLab/ComposeFiles/Tools/docker-compose.yml /opt/DockerCompose/Tools/
+    cp /MyDockerLab/ComposeFiles/SmartHome/docker-compose.yml /opt/DockerCompose/SmartHome/
 fi
 
 # Ask if the user wants to create docker containers
@@ -89,24 +100,24 @@ if [[ $create_containers =~ ^[Yy]$ ]]; then
    read -p "Do you want to run Network Compose? (y/n) " network
    if [[ $network =~ ^[Yy]$ ]]; then
      cd /opt/DockerCompose/Network
-     docker-compose pull
-     docker-compose up -d
+     docker compose pull
+     docker compose up -d
      docker image prune -af
      docker volume prune -f
    fi
    read -p "Do you want to run Tools Compose? (y/n) " Tools
    if [[ $Tools =~ ^[Yy]$ ]]; then
     cd /opt/DockerCompose/Tools
-    docker-compose pull
-    docker-compose up -d
+    docker compose pull
+    docker compose up -d
     docker image prune -af
     docker volume prune -f
    fi
    read -p "Do you want to run SmartHome Compose? (y/n) " SmartHome
    if [[ $SmartHome =~ ^[Yy]$ ]]; then
     cd /opt/DockerCompose/SmartHome
-    docker-compose pull
-    docker-compose up -d
+    docker compose pull
+    docker compose up -d
     docker image prune -af
     docker volume prune -f
    fi
