@@ -46,26 +46,46 @@ apt-get install -y curl
 ```
 
 3. Install Docker & Docker Compose
+3.1  Installing Docker: Update your system
 ```
-sudo apt install docker.io docker-compose docker-doc
-sudo systemctl enable --now docker
+sudo apt update 
+sudo apt upgrade
+```
+3.2  Installing Docker: Install necessary packages
+```
+sudo apt install ca-certificates curl gnupg dpkg lsb-release
+```
+3.3  Installing Docker: Add Docker’s official GPG key
+```
+sudo install -m 0755 -d /etc/apt/keyrings 
 
-```
-- Downloads the Docker installation script using curl.
-- Executes the Docker installation script using sudo sh.
+sudo curl -sS https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor > /usr/share/keyrings/docker-ce.gpg
 
-4. Add user to docker print compose version
+sudo chmod a+r /usr/share/keyrings/docker-ce.gpg
 ```
-sudo /sbin/usermod -aG docker $username  --> logout --> groups
-sudo docker-compose -v
+3.4  Installing Docker: Set up the Docker repository
+```
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-ce.gpg] https://download.docker.com/linux/debian $(lsb_release -sc) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+3.5  Installing Docker: Update the package index
+```
+sudo apt update
+```
+3.6  Installing Docker: Install Docker Engine, Docker CLI, and Docker Compose
+```
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+3.7  Installing Docker: Show the Docker and Docker Compose version information
+```
+docker -v
+docker compose version
 ```
 
-- Retrieves the latest Docker Compose version from GitHub API.
-- Downloads Docker Compose binary using ```curl``` and installs it in ```/usr/local/bin/```.
-- Sets executable permissions for Docker Compose.
-- Downloads Bash completion script for Docker Compose.
-- Prints a success message.
-- Displays the installed Docker Compose version.
+
+4. Add user to docker to Manage Docker as a non-root user
+```
+sudo usermod -aG docker user_to_add && newgrp docker
+```
 
 5. Install Portainer
 ```
