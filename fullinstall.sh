@@ -11,6 +11,9 @@ apt-get install -y curl
 # Ask if the user wants to install Docker and Docker Compose 	Make docker start at boot
 read -p "Do you want to install Docker? (y/n) " install_docker
 if [[ $install_docker =~ ^[Yy]$ ]]; then
+    echo "Update your system"
+    sudo apt update 
+    sudo apt upgrade
     echo "Install necessary packages"
     sudo apt install ca-certificates curl gnupg dpkg lsb-release
     echo "Add Docker’s official GPG key"
