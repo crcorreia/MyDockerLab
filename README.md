@@ -125,20 +125,20 @@ sudo apt-get install libedgetpu1-std
 ## 8. Create containers
 ```
     cd /opt/DockerCompose/Network
-    docker-compose pull
-    docker-compose up -d
+    docker compose pull
+    docker compose up -d
     docker image prune -af
     docker volume prune -f
  
     cd /opt/DockerCompose/Tools
-    docker-compose pull
-    docker-compose up -d
+    docker compose pull
+    docker compose up -d
     docker image prune -af
     docker volume prune -f
 
     cd /opt/DockerCompose/SmartHome
-    docker-compose pull
-    docker-compose up -d
+    docker compose pull
+    docker compose up -d
     docker image prune -af
     docker volume prune -f
  
