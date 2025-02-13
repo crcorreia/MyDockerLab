@@ -1,22 +1,4 @@
 services:
-  wireguard:
-    image: lscr.io/linuxserver/wireguard:latest
-    container_name: Wireguard
-    cap_add:
-      - NET_ADMIN
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Lisbon
-      - PEERS=Profile1,Profile2,OtherProfile
-    volumes:
-      - /opt/appdata/wireguard:/config
-    ports:
-      - 51820:51820/udp
-    sysctls:
-      - net.ipv4.conf.all.src_valid_mark=1
-    restart: unless-stopped
-
   watchtower:
     image: containrrr/watchtower
     volumes:
@@ -84,16 +66,17 @@ services:
       - "8555:8555/tcp" # WebRTC over tcp
       - "8555:8555/udp" # WebRTC over udp
     environment:
-      FRIGATE_RTSP_PASSWORD: "password"
+      FRIGATE_RTSP_PASSWORD: "720@ABF99cf"
 
-  filebrowser:
-    image: filebrowser/filebrowser
-    user: 1000:1000
-    ports:
-      - 8081:80
+  code-server:
+    container_name: vscode
+    image: 'codercom/code-server:latest'
     volumes:
-      - /home/cesar/:/srv
-      - /opt/appdata/filebrowser/filebrowser.db:/database.db
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
+      - '/opt/:/home/coder/project'
+      - '/opt/appdata/vscode:/home/coder/.local/share/code-server'
+    environment:
+      - PASSWORD=720@ABF99cf
+    restart: always
+    user: '1000:1000'
+    ports:
+      - '8888:8080'
